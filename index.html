@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<title>Nuestra Felicilandia 🐊💕</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=Pacifico&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root { color-scheme: light only; }
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;overflow-x:hidden;background:#fff8f4;transition:background 0.5s ease;}
+
+/* ── WELCOME SCREEN ── */
+#welcomeScreen{position:fixed;inset:0;background:linear-gradient(180deg,#fff0f9 0%,#fff8e7 100%);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem;transition:opacity 0.5s ease;}
+.ws-title{font-family:'Playfair Display',serif;color:#d63a82;font-size:clamp(2rem,6vw,3rem);font-weight:900;margin-bottom:1rem;font-style:italic;}
+.ws-btn{background:linear-gradient(135deg,#f472b6,#ec4899);color:#fff;font-family:'DM Sans',sans-serif;font-size:1.2rem;font-weight:700;padding:1rem 2.8rem;border:none;border-radius:999px;cursor:pointer;box-shadow:0 4px 18px rgba(236,72,153,.35);animation: bob 2s ease-in-out infinite;}
+
+/* ── ESTILOS PARA PANTALLAS (SLIDES) ── */
+.slide { display: none !important; width: 100%; min-height: 100vh; animation: fadeInSlide 0.6s ease forwards; padding-bottom: 140px; }
+.slide.active { display: flex !important; }
+@keyframes fadeInSlide { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* BOTÓN FLOTANTE "SIGUIENTE" */
+.btn-next-float { position: fixed; bottom: 85px; right: 20px; z-index: 400; background: linear-gradient(135deg, #f472b6, #ec4899); color: #fff; border: none; border-radius: 999px; padding: 0.8rem 1.5rem; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 1rem; box-shadow: 0 4px 15px rgba(236,72,153,0.4); cursor: pointer; transition: transform 0.2s; display: none; align-items: center; gap: 0.5rem; }
+.btn-next-float:hover { transform: scale(1.05); }
+
+/* ── SADBOY PAGE ── */
+#sadPage{display:none;background:linear-gradient(180deg,#0d0d1a 0%,#1a1a2e 50%,#0f0f20 100%);min-height:100vh;flex-direction:column;align-items:center;justify-content:center;padding:3rem 1.5rem;text-align:center;position:relative;overflow:hidden}
+#sadPage.show{display:flex}
+#sadPage canvas{position:absolute;inset:0;pointer-events:none;width:100%;height:100%}
+.sad-content{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:1.3rem;max-width:500px}
+.sad-croc-img{width:200px;animation:float 3s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+.sad-big{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,5vw,3rem);font-weight:900;font-style:italic;color:#a78bfa;line-height:1.2}
+.sad-big span{color:#f472b6}
+.sad-msg{font-family:'Playfair Display',serif;font-style:italic;font-size:.95rem;color:#c4b5fd;line-height:1.75}
+.sad-box{background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.3);border-radius:1.2rem;padding:1.3rem 1.8rem;width:100%}
+.sad-box-title{font-size:.68rem;font-weight:700;color:#a78bfa;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.7rem}
+.sad-song{font-family:'Playfair Display',serif;font-style:italic;font-size:.9rem;color:#e2e8f0;padding:.4rem 0;border-bottom:1px solid rgba(167,139,250,.15)}
+.sad-song:last-child{border-bottom:none}
+.btn-back{background:linear-gradient(135deg,#f472b6,#ec4899);color:#fff;font-family:'DM Sans',sans-serif;font-weight:700;font-size:1rem;padding:.9rem 2.5rem;border:none;border-radius:999px;cursor:pointer;transition:transform .2s;margin-top:.5rem;box-shadow:0 4px 18px rgba(236,72,153,.35);}
+
+/* ── MAIN PAGE ── */
+#mainPage{display:block}
+canvas.bg{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.wrap{position:relative;z-index:1;}
+.sec{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3rem 1.5rem;text-align:center}
+.rom{font-family:'Pacifico',cursive}
+.sec-title{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:900;color:#d63a82;margin-bottom:.3rem}
+.sec-sub{font-size:.85rem;color:#b07090;margin-bottom:2rem;font-style:italic}
+
+/* MUSIC BAR */
+.music-bar{position:fixed;bottom:0;left:0;width:100%;background:rgba(255,240,252,.97);backdrop-filter:blur(12px);border-top:1.5px solid #fde8f4;padding:.6rem 1.2rem;display:flex;align-items:center;justify-content:space-between; gap:.8rem;z-index:300}
+.mb-left {display: flex; align-items: center; gap: .8rem;}
+.mb-art{width:34px;height:34px;border-radius:.5rem;background:linear-gradient(135deg,#f9a8d4,#fdba74);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
+.mb-info{flex:1;min-width:0; text-align: left;}
+.mb-title{font-size:.75rem;font-weight:700;color:#d63a82;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mb-artist{font-size:.65rem;color:#b07090}
+.mb-right {display: flex; align-items: center; gap: .8rem;}
+.mb-wave{display:flex;align-items:center;gap:2px;height:18px;flex-shrink:0}
+.mb-bar{width:3px;border-radius:2px;background:#f472b6;height:8px}
+.mb-bar.anim{animation:mwave .9s ease-in-out infinite}
+@keyframes mwave{0%,100%{transform:scaleY(.3)}50%{transform:scaleY(1)}}
+.mb-btn{background:linear-gradient(135deg,#f472b6,#ec4899);border:none;border-radius:999px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:1rem;flex-shrink:0;box-shadow:0 2px 10px rgba(236,72,153,.3);}
+
+/* HERO */
+.hero{background:linear-gradient(180deg,#fff0f9 0%,#fff8e7 55%,#eef6ff 100%)}
+.pill{display:inline-block;background:#ffe4f4;color:#c2387a;border-radius:999px;padding:.3rem 1rem;font-size:.75rem;font-weight:700;letter-spacing:.07em;margin-bottom:1.2rem}
+.h-title{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,7vw,4.2rem);font-weight:900;color:#d63a82;line-height:1.1;margin-bottom:.8rem}
+.h-sub{font-family:'Playfair Display',serif;font-size:1.05rem;color:#b07090;font-style:italic}
+
+/* CROC */
+.croc-sec{background:linear-gradient(135deg,#fff8e1,#fff0f9);display:flex;flex-direction:column;align-items:center;padding:5rem 1.5rem}
+.croc-main-img{width:min(320px,80vw);filter:drop-shadow(0 12px 32px rgba(212,84,138,.25));animation:croc-float 4s ease-in-out infinite}
+@keyframes croc-float{0%,100%{transform:translateY(0) rotate(-.5deg)}50%{transform:translateY(-10px) rotate(.5deg)}}
+.croc-caption-row{display:flex;gap:1.2rem;justify-content:center;max-width:580px;width:100%;margin-top:2rem;flex-wrap:wrap}
+.croc-cap{flex:1;min-width:160px;background:#fff;border-radius:1.2rem;border:2px solid #fde8f4;padding:1rem 1.1rem;text-align:center}
+.croc-cap-icon{font-size:1.6rem;margin-bottom:.4rem}
+.croc-cap-name{font-family:'Playfair Display',serif;font-weight:700;font-size:.95rem;color:#d63a82;margin-bottom:.2rem}
+.croc-cap-desc{font-size:.73rem;color:#b07090;line-height:1.5}
+
+/* TICKET */
+.ticket-sec{background:linear-gradient(135deg,#fff3fb,#fffae8 50%,#eef8ff);display:flex;flex-direction:column;align-items:center;padding:5rem 1.5rem}
+.ticket{background:#fff;border-radius:1.4rem;max-width:680px;width:100%;overflow:hidden;border:2.5px dashed #f9a8d4;box-shadow:0 8px 32px rgba(212,84,138,.08)}
+.ticket-top{background:linear-gradient(135deg,#f9a8d4,#fdba74);padding:1.5rem 2rem;display:flex;align-items:center;gap:1rem}
+.tt-title{font-family:'Playfair Display',serif;font-style:italic;color:#fff;font-size:1.5rem;text-shadow:0 1px 4px rgba(0,0,0,.12)}
+.tt-sub{color:rgba(255,255,255,.85);font-size:.78rem}
+.ticket-perfs{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;background:#fde8f4}
+.tp{background:#fff;padding:1.2rem 1.4rem}
+.tp-label{font-size:.66rem;font-weight:700;color:#d480a8;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.3rem}
+.tp-val{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:#5c2a4a;margin-bottom:.2rem}
+.tp-desc{font-size:.73rem;color:#b07090;line-height:1.5}
+.ticket-footer{padding:.9rem 2rem;border-top:1px dashed #fde8f4;display:flex;align-items:center;gap:.8rem}
+.barcode{flex:1;height:32px;background:repeating-linear-gradient(90deg,#d4a0c0 0,#d4a0c0 2px,#fff 2px,#fff 5px);border-radius:3px;opacity:.35}
+.ticket-num{font-size:.68rem;color:#c080a8;font-weight:700;letter-spacing:.12em}
+
+/* MEDIA */
+.media-sec{background:linear-gradient(135deg,#fff0fc,#fffde7 50%,#e8f8ff);display:flex;flex-direction:column;align-items:center;padding:5rem 1.5rem}
+.media-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;max-width:700px;width:100%}
+.media-item-video{grid-column:1 / -1}
+.media-frame{background:#fff;border-radius:1.3rem;overflow:hidden;box-shadow:0 6px 24px rgba(212,84,138,.12);transition:transform .3s}
+.media-item:nth-child(2) .media-frame{transform:rotate(1.5deg)}
+.media-item:nth-child(3) .media-frame{transform:rotate(-1.5deg)}
+.media-content{width:100%;display:block;object-fit:cover; border-radius: 1.2rem 1.2rem 0 0;}
+.vid-content{width:100%; max-height:360px; object-fit:cover; border-radius: 1.2rem 1.2rem 0 0;}
+.img-content{aspect-ratio:4/5;}
+.media-caption{padding:.8rem 1rem 1rem}
+.mc-title{font-family:'Playfair Display',serif;font-style:italic;color:#d63a82;font-size:.9rem;margin-bottom:.2rem}
+.mc-text{font-size:.75rem;color:#8c6e8a;line-height:1.55}
+
+/* AUDIO VOZ */
+.audio-sec{background:linear-gradient(135deg,#fff0fc,#eef4ff);display:flex;flex-direction:column;align-items:center;padding:5rem 1.5rem}
+#alvaroEnvelope { background: #fff; border-radius: 16px; padding: 2rem; box-shadow: 0 10px 30px rgba(212,84,138,0.1); text-align: center; cursor: pointer; transition: all 0.3s ease; position: relative; max-width: 320px; width: 100%; margin: 0 auto; border: 1.5px solid #fde8f4; }
+.envelope-seal { font-size: 3rem; margin-bottom: 1rem; display: block; animation: bob 2s infinite; }
+.envelope-title { font-family:'Playfair Display',serif; color:#d63a82; font-size: 1.1rem; font-weight: 900; line-height: 1.3; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; }
+.envelope-sub { font-size: 0.8rem; color: #b07090; font-style: italic; }
+.ios-msg-bubble { background-color: #E5E5EA; border-radius: 20px; padding: 6px 12px; display: flex; align-items: center; gap: 8px; max-width: 260px; width: 100%; margin: 15px auto; height: 42px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+.ios-play-btn { background: none; border: none; color: #d63a82; font-size: 1.5rem; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; padding: 0; margin-top: -2px;}
+.ios-waveform-static { flex: 1; height: 25px; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="25" viewBox="0 0 100 25"><path d="M2,12.5 L2,12.5 M7,10 L7,15 M12,8 L12,17 M17,11 L17,14 M22,6 L22,19 M27,10 L27,15 M32,9 L32,16 M37,12 L37,13 M42,7 L42,18 M47,11 L47,14 M52,8 L52,17 M57,10 L57,15 M62,11 L62,14 M67,9 L67,16 M72,12 L72,13 M77,7 L77,18 M82,10 L82,15 M87,11 L87,14 M92,9 L92,16 M97,12 L97,13" stroke="%23B4B4B8" stroke-width="2" stroke-linecap="round"/></svg>') repeat-x center; background-size: auto 100%; position: relative; }
+.ios-waveform-progress { position: absolute; top: 0; left: 0; height: 100%; width: 0%; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="25" viewBox="0 0 100 25"><path d="M2,12.5 L2,12.5 M7,10 L7,15 M12,8 L12,17 M17,11 L17,14 M22,6 L22,19 M27,10 L27,15 M32,9 L32,16 M37,12 L37,13 M42,7 L42,18 M47,11 L47,14 M52,8 L52,17 M57,10 L57,15 M62,11 L62,14 M67,9 L67,16 M72,12 L72,13 M77,7 L77,18 M82,10 L82,15 M87,11 L87,14 M92,9 L92,16 M97,12 L97,13" stroke="%23d63a82" stroke-width="2" stroke-linecap="round"/></svg>') repeat-x center; background-size: auto 100%; transition: width 0.1s linear; }
+.ios-msg-bubble.playing .ios-waveform-progress { animation: iosPulse 1.5s infinite ease-in-out; }
+@keyframes iosPulse { 0% { filter: drop-shadow(0 0 0px rgba(214,58,130,0)); } 50% { filter: drop-shadow(0 0 3px rgba(214,58,130,0.5)); } 100% { filter: drop-shadow(0 0 0px rgba(214,58,130,0)); } }
+.ios-time { font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-size: 0.75rem; color: #8E8E93; min-width: 35px; text-align: right; font-weight: 600;}
+
+/* PLAYLISTS */
+.pl-sec{display:flex;flex-direction:column;align-items:center;padding:5rem 1.5rem}
+.pl-love{background:linear-gradient(135deg,#fff0f9,#fff5e0)}
+.pl-val{background:linear-gradient(135deg,#e8f4ff,#f0fff4)}
+.pl-card{background:#fff;border-radius:1.4rem;padding:2rem;border:2px solid #fde8f4;display:flex;align-items:flex-start;gap:1.8rem;max-width:680px;width:100%;flex-wrap:wrap;box-shadow:0 4px 16px rgba(212,84,138,.08)}
+.pl-val .pl-card{border-color:#bce4ff}
+.qr-box{width:130px;height:130px;border-radius:.9rem;background:#fafafa;border:2.5px dashed #f9a8d4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4rem;flex-shrink:0;overflow:hidden;}
+.pl-val .qr-box{border-color:#93c5fd}
+.qr-box img{width:100%;height:100%;object-fit:cover;border-radius:.7rem}
+.pl-info{flex:1;min-width:180px;text-align:left}
+.pl-title{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:900;color:#d63a82;margin-bottom:.4rem}
+.pl-val .pl-title{color:#1a5f9c}
+.pl-desc{font-size:.82rem;color:#b07090;line-height:1.65;font-style:italic;margin-bottom:.8rem}
+.pl-val .pl-desc{color:#4a7090}
+.pl-songs{display:flex;flex-direction:column;gap:.4rem}
+.pl-row{display:flex;align-items:flex-start;gap:.6rem;font-size:.75rem;color:#9c7090}
+.pl-num{width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#f9a8d4,#fdba74);display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;color:#fff;flex-shrink:0;margin-top:.1rem}
+
+/* POLAROID */
+.spot-sec{background:linear-gradient(135deg,#fff9f0,#fef9e7);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3rem 1.5rem;}
+.polaroid-frame { background: #ffffff !important; padding: 12px 12px 60px 12px; border-radius: 3px; box-shadow: 0 15px 35px rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.05); transform: rotate(-3deg); max-width: 280px; margin: 0 auto 3rem auto; position: relative;}
+.polaroid-frame::before { content: ''; position: absolute; top: -12px; left: 50%; transform: translateX(-50%) rotate(2deg); width: 80px; height: 25px; background: rgba(255, 255, 255, 0.5); box-shadow: 0 1px 3px rgba(0,0,0,0.1); backdrop-filter: blur(2px); z-index: 2;}
+.polaroid-frame img {width: 100%; aspect-ratio: 4/5; object-fit: cover;}
+.big-q{font-family:'Playfair Display',serif;font-size:clamp(1.4rem,6vw,2rem);font-weight:700;font-style:italic;color:#d63a82;max-width:600px;line-height:1.45;text-align:center; padding: 0 10px;}
+
+/* PROPUESTA */
+.ask-sec{background:linear-gradient(180deg,#fff0fb,#eef4ff);display:flex;flex-direction:column;align-items:center;padding:5rem 1.5rem; transition: background 0.5s ease;}
+.ask-pre{font-family:'Playfair Display',serif;font-style:italic;font-size:1.05rem;color:#9c6b8a;margin-bottom:.5rem;text-align:center}
+.ask-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,5.5vw,3.2rem);font-weight:900;color:#2563eb;line-height:1.2;margin-bottom:1.8rem;text-align:center}
+.hrow{display:flex;gap:.4rem;justify-content:center;flex-wrap:wrap;min-height:2.2rem;margin-bottom:1.2rem}
+.h{font-size:1.4rem;opacity:0;transform:scale(0) translateY(10px);transition:all .4s;display:inline-block}
+.h.on{opacity:1;transform:scale(1) translateY(0)}
+
+/* BOTONES SI Y NO */
+.brow{display:flex;gap:1.2rem;justify-content:center;align-items:center;position:relative;min-height:90px;width:100%;max-width:380px}
+.byes{background:linear-gradient(135deg,#f472b6,#ec4899);color:#fff;font-family:'DM Sans',sans-serif;font-size:1.2rem;font-weight:700;padding:.9rem 2.8rem;border:none;border-radius:999px;cursor:pointer;box-shadow:0 4px 18px rgba(236,72,153,.35);transition:all 0.2s;position:relative;z-index:2}
+.byes:hover{transform:scale(1.08)}
+.bno{background:#f3e8ff;color:#9c6b8a;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:700;padding:.75rem 1.8rem;border:none;border-radius:999px;cursor:pointer;position:relative;transition:all .25s; z-index:1}
+
+/* ── CELEBRACIÓN FINAL (NUEVAS SECCIONES) ── */
+.yes-msg{display:none;flex-direction:column;align-items:center;gap:.8rem;text-align:center; width: 100%;}
+.yes-msg.show{display:flex;animation:popIn .5s forwards}
+@keyframes popIn{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+.yrom{font-family:'Pacifico',cursive;font-size:2.8rem;color:#d63a82; text-shadow: 0 4px 10px rgba(214, 58, 130, 0.2);}
+.ysub{font-family:'Playfair Display',serif;font-style:italic;font-size:1.1rem;color:#8c6e8a;max-width:500px;line-height:1.7; margin-top: 1rem; margin-bottom: 1rem;}
+
+body.yes-celebration {
+  background: url('bebes-abrazados.png?v=3') no-repeat center top fixed !important; 
+  background-size: cover !important;
+  animation: bgSparkle 3s ease infinite;
+}
+@keyframes bgSparkle { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+
+/* Tarjeta Blanca Translúcida donde va el texto */
+.celebration-card {
+    background: rgba(255, 255, 255, 0.92);
+    padding: 2.5rem 1.5rem; border-radius: 2rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(10px);
+    max-width: 550px; width: 100%;
+    border: 2px solid #fff;
+    margin-top: 250px; /* Deja espacio para ver la foto de bebés arriba */
+    display: flex; flex-direction: column; align-items: center; gap: 1rem;
+}
+body.yes-celebration .wrap { filter: none !important; }
+body.yes-celebration .music-bar { display: none !important; } /* Ocultar barra de música inferior */
+
+/* SECCIÓN: CONTRATO */
+.contrato-box { background: #fff; border: 2px dashed #f9a8d4; border-radius: 1.2rem; padding: 1.5rem; width: 100%; text-align: left; margin-top: 1.5rem; }
+.c-title { font-family:'Playfair Display',serif; font-size: 1.2rem; color: #d63a82; font-weight: 900; margin-bottom: 1rem; text-align: center; }
+.c-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 0.8rem; font-size: 0.85rem; color: #5c2a4a; line-height: 1.4; }
+.c-check { font-size: 1.2rem; color: #f472b6; }
+.btn-firmar { background: #d63a82; color: #fff; border: none; padding: 0.8rem 2rem; border-radius: 99px; font-weight: bold; width: 100%; margin-top: 1rem; cursor: pointer; transition: transform 0.2s;}
+.btn-firmar:active { transform: scale(0.95); }
+
+/* SECCIÓN: PRIMERA CITA */
+.cita-box { width: 100%; margin-top: 2rem; border-top: 1px solid #fde8f4; padding-top: 1.5rem; }
+.cita-title { font-family:'Playfair Display',serif; font-size: 1.1rem; color: #2563eb; font-weight: 900; margin-bottom: 1rem; }
+.cita-btns { display: flex; flex-direction: column; gap: 10px; }
+.cita-btn { background: #eff6ff; color: #1e3a8a; border: 2px solid #bfdbfe; padding: 1rem; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 0.9rem;}
+.cita-btn:hover { background: #dbeafe; transform: translateX(5px); }
+
+/* CONFETTI & SPARKS */
+.confetti-wrap{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:999}
+.cp{position:absolute;animation:fall linear forwards}
+@keyframes fall{0%{opacity:1}100%{transform:translateY(110vh) rotate(800deg);opacity:0}}
+.sparkle{position:absolute; background: radial-gradient(circle, #fff 10%, rgba(255,255,255,0) 80%); border-radius: 50%; opacity: 0; pointer-events: none;}
+@keyframes firework { 0% { transform: translate(0, 0) scale(1); opacity: 1; } 20% { opacity: 1; } 100% { transform: translate(var(--x), var(--y)) scale(0.1); opacity: 0; } }
+
+</style>
+</head>
+<body id="bodyMain">
+
+<div id="welcomeScreen">
+    <h1 class="ws-title">Tengo algo muy especial para ti...</h1>
+    <button class="ws-btn" onclick="startFelicilandia()">Abrir Felicilandia ✨</button>
+</div>
+
+<button id="nextBtnFloat" class="btn-next-float" onclick="nextSlide()">Siguiente ➔</button>
+
+<div class="confetti-wrap" id="confetti"></div>
+<div class="confetti-wrap" id="fireworks-layer" style="z-index: 1000;"></div>
+
+<div id="sadPage">
+  <canvas id="rainC"></canvas>
+  <div class="sad-content">
+    <img class="sad-croc-img" src="cocodrilos.png" alt="cocodrilos" onerror="this.style.fontSize='4rem';this.outerHTML='<div style=font-size:4rem>🐊😭</div>'">
+    <h1 class="sad-big">NO LO HAGAS.<br><span>No quiero terminar</span><br>escuchando a Junior H<br>pensando en ti.</h1>
+    <p class="sad-msg">Si dices que no... me convierto en el sadboy más triste de Felicilandia. El cocodrilo verde llora. Yo lloro. Hasta el acordeón llora.</p>
+    <div class="sad-box">
+      <div class="sad-box-title">🎧 Lo que tendría que escuchar en loop</div>
+      <div class="sad-song">"Que Poca Madre" — Junior H 💔</div>
+      <div class="sad-song">"Sad Boyz 4 Life" — mientras el cocodrilo me da la mano</div>
+      <div class="sad-song">"El Azul" — llorando en el rincón de Felicilandia</div>
+    </div>
+    <button class="btn-back" onclick="goBack()">¡Mentira, regrésame, me equivoqué!</button>
+  </div>
+</div>
+
+<div id="mainPage">
+  <canvas class="bg" id="bgc"></canvas>
+
+  <div class="music-bar" id="musicBar">
+    <div class="mb-left">
+      <div class="mb-art">🎵</div>
+      <div class="mb-info">
+        <div class="mb-title">Nuestra Canción</div>
+        <div class="mb-artist">Álvaro Díaz · Felicilandia</div>
+      </div>
+    </div>
+    <div class="mb-right">
+      <div class="mb-wave" id="mbWave"></div>
+      <button class="mb-btn" id="mbPlayBtn" onclick="toggleBg()">▶</button>
+    </div>
+  </div>
+  <audio id="bgAudio" src="cancion-fondo.mp3?v=2" loop></audio>
+  
+  <audio id="yesAudio" src="cancion-si.mp3" preload="auto"></audio>
+
+  <div class="wrap">
+
+    <div class="sec hero slide active">
+      <div class="pill">✦ Carlos & Marly ✦</div>
+      <h1 class="h-title">Bienvenida a <br><span class="rom" style="color:#ec4899">Nuestra Felicilandia,</span><br>Marly</h1>
+      <p class="h-sub" style="margin-bottom: 2rem;">Este parque solo abre para ti, mi chinita linda...</p>
+      <p style="font-size: 0.85rem; color: #d63a82; font-weight: bold; font-style: italic; animation: bob 2s infinite;">(Toca en "Siguiente" para recorrerlo)</p>
+    </div>
+
+    <div class="croc-sec slide">
+      <div style="width: 100%; text-align: center;">
+        <h2 class="sec-title" style="font-size: clamp(1.6rem, 7vw, 2rem);">Los guardianes de Felicilandia</h2>
+        <p class="sec-sub">El verde y su chinita blanca — siempre juntos 💚🤍</p>
+      </div>
+      <img class="croc-main-img" src="cocodrilos.png" alt="Cocodrilos Felicilandia" onerror="this.outerHTML='<div style=font-size:6rem>🐊🤍</div>'">
+      <div class="croc-caption-row">
+        <div class="croc-cap"><div class="croc-cap-icon">💚</div><div class="croc-cap-name">El cocodrilo verde</div><div class="croc-cap-desc">Buscando la felicidad en el amor — y la encontró en ti.</div></div>
+        <div class="croc-cap"><div class="croc-cap-icon">🤍</div><div class="croc-cap-name">La chinita blanca</div><div class="croc-cap-desc">Tú. La que hace que Felicilandia tenga sentido y el verde no se rinda.</div></div>
+      </div>
+    </div>
+
+    <div class="ticket-sec slide">
+      <h2 class="sec-title">Tu entrada a Felicilandia</h2>
+      <p class="sec-sub">Solo hay una, y es tuya.</p>
+      <div class="ticket">
+        <div class="ticket-top">
+          <span style="font-size:2.2rem">🎡</span>
+          <div><div class="tt-title">Felicilandia VIP Pass ✦</div><div class="tt-sub">Acceso ilimitado · Edición especial para ti</div></div>
+        </div>
+        <div class="ticket-perfs">
+          <div class="tp"><div class="tp-label">Titular</div><div class="tp-val">Marly 💕</div><div class="tp-desc">La persona más especial de este parque</div></div>
+          <div class="tp"><div class="tp-label">Acompañante</div><div class="tp-val">Yo, siempre</div><div class="tp-desc">Guardado en la próxima vida también</div></div>
+          <div class="tp"><div class="tp-label">Atracciones</div><div class="tp-val">Todas</div><div class="tp-desc">El horóscopo ya lo confirmó: somos fuego</div></div>
+        </div>
+        <div class="ticket-footer"><div class="barcode"></div><span class="ticket-num">FELICI-150526</span></div>
+      </div>
+    </div>
+
+    <div class="media-sec slide">
+      <h2 class="sec-title">Momentos que no se olvidan</h2>
+      <p class="sec-sub">Nuestros recuerdos guardados aquí para siempre 🎬</p>
+      <div class="media-grid">
+        <div class="media-item media-item-video">
+          <div class="media-frame">
+            <video class="vid-content" id="mainVideo" src="nuestro-video.mp4" controls playsinline></video>
+            <div class="media-caption"><div class="mc-title">Ese momento especial 🎬</div></div>
+          </div>
+        </div>
+        <div class="media-item">
+          <div class="media-frame">
+            <img class="media-content img-content" src="foto1.jpg" alt="Nuestro recuerdo 1">
+          </div>
+        </div>
+        <div class="media-item">
+          <div class="media-frame">
+            <img class="media-content img-content" src="foto2.jpg" alt="Nuestro recuerdo 2">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="audio-sec slide">
+      <div id="alvaroEnvelope" onclick="revealMessage()">
+        <div id="envelopeContent">
+          <span class="envelope-seal">💌</span>
+          <h3 class="envelope-title">Marly,<br>tengo un mensaje<br>exclusivo</h3>
+          <p class="envelope-sub">(Toca la carta para abrir)</p>
+        </div>
+        <div id="playingContent" style="display:none; flex-direction:column; align-items:center; width: 100%;">
+          <h3 style="font-family:'Playfair Display',serif; color:#d63a82; font-size:1.1rem; font-weight:900; margin-bottom: 0.2rem;">Álvaro Díaz ✦ Felicilandia</h3>
+          <p style="font-size: 0.75rem; color: #b07090; font-style: italic; margin-bottom: 0.5rem;">"Chinita Linda" Nota de Voz</p>
+          <div class="ios-msg-bubble">
+             <button class="ios-play-btn" id="iosPlayBtn" onclick="toggleAlvaroPlay(event)">▶</button>
+             <div class="ios-waveform-static" id="iosWaveform"><div class="ios-waveform-progress" id="iosProgress"></div></div>
+             <div class="ios-time" id="iosTime">0:00</div>
+          </div>
+          <audio id="alvaroAudio" src="mensaje-voz.mp3" ontimeupdate="updateIosProgress()" onended="resetIosAudio()"></audio>
+        </div>
+      </div>
+    </div>
+
+    <div class="pl-sec pl-love slide">
+      <h2 class="sec-title">Canciones de Alvarito 🎵</h2>
+      <div class="pl-card">
+        <a href="AQUÍ_PEGA_EL_LINK_DE_SPOTIFY" target="_blank"><div class="qr-box"><img src="portada-alvarito.jpg"></div></a>
+        <div class="pl-info">
+          <div class="pl-title">🎵 Álvaro Díaz · Para ti</div>
+          <div class="pl-desc">Toca la imagen para escuchar.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pl-sec pl-val slide">
+      <h2 class="sec-title" style="color:#1a5f9c">Vallenatos que te dedico 🪗</h2>
+      <div class="pl-card" style="border-color:#bce4ff">
+        <a href="AQUÍ_PEGA_EL_LINK_DE_TU_PLAYLIST" target="_blank"><div class="qr-box" style="border-color:#93c5fd;"><img src="portada-vallenato.jpg"></div></a>
+        <div class="pl-info">
+          <div class="pl-title" style="color:#1a5f9c">🪗 Vallenatos · Para ti</div>
+          <div class="pl-desc" style="color:#4a7090">Toca la imagen para sentir lo que el acordeón dice por mí.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="spot-sec slide">
+      <div class="polaroid-frame">
+        <img src="foto-frase.jpg" onerror="this.style.display='none'">
+      </div>
+      <p class="big-q" style="animation: bob 2.5s ease-in-out infinite;">"Yo estoy buscando la felicidad en el amor — y la encontré en ti."</p>
+    </div>
+
+    <div class="sec ask-sec slide" id="ask-sec">
+      
+      <div id="ask-view" style="display:flex;flex-direction:column;align-items:center;width:100%; transition: opacity 0.5s ease;">
+        <p class="ask-pre">He pensado mucho en esto y...</p>
+        <h2 class="ask-title">¿Quieres ser mi novia?</h2>
+        <div class="hrow" id="hrow"></div>
+        <div class="brow" id="brow">
+          <button class="byes" onclick="handleYes()">Sí 💕</button>
+          <button class="bno" id="bno" onmouseenter="moveNo(this)" ontouchstart="moveNo(this)">No</button>
+        </div>
+        <p style="font-size:.72rem;color:#c8a0c0;margin-top:2rem;font-style:italic">* Si intentas pulsar "No" ya sabes lo que pasa... 😉</p>
+      </div>
+      
+      <div class="yes-msg" id="yes-msg">
+        
+        <div class="celebration-card">
+            <p class="yrom">¡Mi Felicilandia Eres Tú!</p>
+            <p class="ysub">Gracias por decir que sí, mi chinita linda. Mi mundo es infinitamente más bonito desde que estás en él. Nuestro 'Siempre Juntos' empieza hoy.</p>
+            
+            <div class="contrato-box">
+                <p class="c-title">📜 Decreto Oficial de Felicilandia</p>
+                <div class="c-item"><span class="c-check">☑️</span> Cláusula 1: Compartir siempre la comida y los postres.</div>
+                <div class="c-item"><span class="c-check">☑️</span> Cláusula 2: Cantar a todo pulmón Álvaro Díaz y Vallenatos en el carro.</div>
+                <div class="c-item"><span class="c-check">☑️</span> Cláusula 3: Amarnos, cuidarnos y hacernos felices todos los días.</div>
+                <button class="btn-firmar" id="btnFirmar" onclick="firmarContrato()">Firmar Digitalmente ✍️</button>
+            </div>
+
+            <div class="cita-box" id="citaBox" style="display: none; opacity: 0; transition: opacity 0.5s;">
+                <p class="cita-title">🎁 Tu primer regalo: Elige tu premio ahora mismo</p>
+                <div class="cita-btns">
+                    <button class="cita-btn" onclick="elegirCita(this)">🍔 Llevame a comer mi favorito</button>
+                    <button class="cita-btn" onclick="elegirCita(this)">🐻 Dame el abrazo más grande del mundo</button>
+                    <button class="cita-btn" onclick="elegirCita(this)">💃 Baila este vallenato conmigo ahora</button>
+                </div>
+            </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function startFelicilandia() {
+    document.getElementById('welcomeScreen').style.opacity = '0';
+    setTimeout(() => {
+        document.getElementById('welcomeScreen').style.display = 'none';
+        document.getElementById('nextBtnFloat').style.display = 'flex'; 
+    }, 500);
+    const bgAudio = document.getElementById('bgAudio');
+    bgAudio.play().catch(e => console.log(e));
+    bgPlaying = true;
+    document.getElementById('mbPlayBtn').textContent = '⏸';
+    document.querySelectorAll('.mb-bar').forEach(b => b.classList.add('anim'));
+}
+
+let currentSlide = 0;
+function nextSlide() {
+    const slides = document.querySelectorAll('.slide');
+    const currentVideo = slides[currentSlide].querySelector('video');
+    if(currentVideo) { currentVideo.pause(); }
+
+    slides[currentSlide].classList.remove('active');
+    currentSlide++;
+    if(currentSlide >= slides.length) currentSlide = slides.length - 1;
+    slides[currentSlide].classList.add('active');
+    window.scrollTo({top: 0, behavior: 'smooth'});
+
+    if(currentSlide === slides.length - 1) {
+        document.getElementById('nextBtnFloat').style.display = 'none';
+    }
+
+    const nextVideo = slides[currentSlide].querySelector('video');
+    if(nextVideo) { nextVideo.play().catch(e => console.log(e)); }
+}
+
+const alvaroAudio = document.getElementById('alvaroAudio');
+const iosProgress = document.getElementById('iosProgress');
+const iosPlayBtn = document.getElementById('iosPlayBtn');
+const iosBubble = document.querySelector('.ios-msg-bubble');
+let alvaroPlaying = false;
+
+function revealMessage() {
+  document.getElementById('envelopeContent').style.display = 'none';
+  document.getElementById('playingContent').style.display = 'flex';
+  document.getElementById('alvaroEnvelope').style.cursor = 'default';
+  document.getElementById('alvaroEnvelope').onclick = null; 
+  if(bgPlaying) { toggleBg(); } 
+  toggleAlvaroPlay(); 
+}
+
+function toggleAlvaroPlay(event) {
+    if(event) event.stopPropagation(); 
+    if(alvaroPlaying) {
+        alvaroAudio.pause();
+        iosPlayBtn.textContent = '▶';
+        iosBubble.classList.remove('playing');
+    } else {
+        alvaroAudio.play().catch(e => console.log(e));
+        iosPlayBtn.textContent = '⏸';
+        iosBubble.classList.add('playing');
+    }
+    alvaroPlaying = !alvaroPlaying;
+}
+
+function updateIosProgress() {
+    const percentage = (alvaroAudio.currentTime / alvaroAudio.duration) * 100;
+    iosProgress.style.width = percentage + '%';
+    const time = Math.floor(alvaroAudio.currentTime);
+    const mins = Math.floor(time / 60);
+    const secs = time % 60;
+    document.getElementById('iosTime').textContent = mins + ':' + (secs < 10 ? '0' : '') + secs;
+}
+
+function resetIosAudio() {
+    alvaroPlaying = false;
+    iosPlayBtn.textContent = '▶';
+    iosBubble.classList.remove('playing');
+    alvaroAudio.currentTime = 0;
+    iosProgress.style.width = '0%';
+    document.getElementById('iosTime').textContent = '0:00';
+}
+
+const bgc=document.getElementById('bgc'),ctx=bgc.getContext('2d');
+let pts=[];
+const cols=['#f9a8d4','#fdba74','#86efac','#93c5fd','#c4b5fd','#fde68a','#f0abfc'];
+const yesCols = ['#fbbf24', '#f59e0b', '#fffbeb', '#fecdd3', '#fda4af', '#fdf2f8']; 
+function resize(){bgc.width=window.innerWidth;bgc.height=window.innerHeight}
+resize();window.addEventListener('resize',()=>{resize();initPts()});
+function initPts(){pts=[];const n=Math.max(18,~~(bgc.width*bgc.height/8000));for(let i=0;i<n;i++)pts.push(mkPt(true))}
+function mkPt(r){const t=Math.random()>.55?'heart':'star';return{x:Math.random()*bgc.width,y:r?Math.random()*bgc.height:-30,t,sz:t==='heart'?4+Math.random()*8:2+Math.random()*5,col:cols[~~(Math.random()*cols.length)],sp:.2+Math.random()*.4,drift:(Math.random()-.5)*.3,op:.13+Math.random()*.3,wb:Math.random()*Math.PI*2,wbs:.007+Math.random()*.015}}
+function dH(x,y,s,c,a){ctx.save();ctx.globalAlpha=a;ctx.fillStyle=c;ctx.beginPath();const k=s*.5;ctx.moveTo(x,y+k*.65);ctx.bezierCurveTo(x,y,x-k,y,x-k,y-k*.5);ctx.bezierCurveTo(x-k,y-k*1.1,x,y-k*1.1,x,y-k*.5);ctx.bezierCurveTo(x,y-k*1.1,x+k,y-k*1.1,x+k,y-k*.5);ctx.bezierCurveTo(x+k,y,x,y,x,y+k*.65);ctx.fill();ctx.restore()}
+function dS(x,y,s,c,a){ctx.save();ctx.globalAlpha=a;ctx.fillStyle=c;ctx.beginPath();for(let i=0;i<5;i++){const ang=i*Math.PI*2/5-Math.PI/2,inn=ang+Math.PI/5;i===0?ctx.moveTo(x+Math.cos(ang)*s,y+Math.sin(ang)*s):ctx.lineTo(x+Math.cos(ang)*s,y+Math.sin(ang)*s);ctx.lineTo(x+Math.cos(inn)*s*.38,y+Math.sin(inn)*s*.38)}ctx.closePath();ctx.fill();ctx.restore()}
+function animPts(){ctx.clearRect(0,0,bgc.width,bgc.height);pts.forEach((p,i)=>{p.wb+=p.wbs;p.x+=Math.sin(p.wb)*p.drift;p.y+=p.sp;if(p.y>bgc.height+30)pts[i]=mkPt(false);p.t==='heart'?dH(p.x,p.y,p.sz,p.col,p.op):dS(p.x,p.y,p.sz,p.col,p.op)});requestAnimationFrame(animPts)}
+initPts();animPts();
+
+const mbw=document.getElementById('mbWave');
+for(let i=0;i<8;i++){const b=document.createElement('div');b.className='mb-bar';b.style.height=(7+~~(Math.random()*10))+'px';mbw.appendChild(b)}
+
+let bgPlaying=false;
+const bgAudio=document.getElementById('bgAudio');
+function toggleBg(){
+  if(bgPlaying){ bgAudio.pause(); }else{ bgAudio.play().catch(e=>console.log(e)); }
+  bgPlaying=!bgPlaying;
+  document.getElementById('mbPlayBtn').textContent=bgPlaying?'⏸':'▶';
+  document.querySelectorAll('.mb-bar').forEach(b=>b.classList.toggle('anim',bgPlaying))
+}
+
+const he=['❤️','💕','💖','💗','💝','🌸','✨','🎀','🦋','🌺'];
+const hr=document.getElementById('hrow');
+for(let i=0;i<10;i++){const h=document.createElement('span');h.className='h';h.textContent=he[i%he.length];hr.appendChild(h)}
+
+// ── LA GRAN CELEBRACIÓN DEL SÍ ──
+function handleYes(){
+    document.querySelectorAll('.h').forEach((h,i)=>setTimeout(()=>h.classList.add('on'),i*85));
+    setTimeout(()=>{
+        document.getElementById('ask-view').style.display='none';
+        document.getElementById('yes-msg').classList.add('show');
+        document.body.classList.add('yes-celebration');
+        
+        // 1. Apagar todas las músicas anteriores
+        bgAudio.pause();
+        alvaroAudio.pause();
+        
+        // 2. Tocar a Martín Elías a todo pulmón
+        const martinAudio = document.getElementById('yesAudio');
+        martinAudio.play().catch(e=>console.log("Error autoplay Martin Elias:", e));
+        
+        celebrationGlitter();
+        launchFireworksCelebration();
+    },1000);
+}
+
+// LÓGICA DEL CONTRATO Y LA CITA
+function firmarContrato() {
+    const btn = document.getElementById('btnFirmar');
+    btn.innerHTML = '¡Firmado Oficialmente! ✅';
+    btn.style.background = '#10b981'; // Color verde de éxito
+    btn.disabled = true;
+    
+    // Mostrar la opción de primera cita
+    const citaBox = document.getElementById('citaBox');
+    citaBox.style.display = 'block';
+    setTimeout(() => { citaBox.style.opacity = '1'; }, 100);
+}
+
+function elegirCita(btnElement) {
+    const allBtns = document.querySelectorAll('.cita-btn');
+    allBtns.forEach(b => {
+        b.style.opacity = '0.5';
+        b.style.pointerEvents = 'none';
+    });
+    btnElement.style.opacity = '1';
+    btnElement.style.background = '#dbeafe';
+    btnElement.style.transform = 'scale(1.05)';
+    btnElement.innerHTML += ' 💖 ¡Concedido!';
+}
+
+// Efectos de luces y confeti
+function celebrationGlitter(){
+    const c=document.getElementById('confetti');
+    for(let i=0;i<250;i++){ 
+        const p=document.createElement('div');
+        p.className='cp';
+        const sz=3+Math.random()*7; 
+        const isHeart = Math.random() > 0.8;
+        p.style.cssText=`left:${Math.random()*100}%;top:-20px;width:${sz}px;height:${sz}px;background:${yesCols[~~(Math.random()*yesCols.length)]};border-radius:${isHeart?'50%':'3px'};box-shadow: 0 0 5px rgba(255,255,255,0.8);animation-duration:${1.5+Math.random()*2.5}s;animation-delay:${Math.random()*0.3}s;filter: blur(${Math.random()>0.5?1:0}px);`;
+        c.appendChild(p);
+        setTimeout(()=>p.remove(),4000);
+    }
+}
+
+function launchFireworksCelebration() {
+    const fwLayer = document.getElementById('fireworks-layer');
+    for (let i = 0; i < 40; i++) {
+        setTimeout(() => createFirework(fwLayer, 'left'), Math.random() * 2500);
+        setTimeout(() => createFirework(fwLayer, 'right'), Math.random() * 2500);
+    }
+}
+
+function createFirework(container, side) {
+    const fw = document.createElement('div');
+    fw.className = 'firework-volador';
+    const numSparks = 25; 
+    const startX = side === 'left' ? (Math.random() * 50) : (container.offsetWidth - (Math.random() * 50));
+    const startY = container.offsetHeight - (Math.random() * 100);
+    for (let i = 0; i < numSparks; i++) {
+        const spark = document.createElement('div');
+        spark.className = 'sparkle';
+        const destX = side === 'left' ? (Math.random() * 150 + 100) : -(Math.random() * 150 + 100); 
+        const destY = -(150 + Math.random() * 300); 
+        const size = side === 'left' ? (2 + Math.random() * 5) : (1 + Math.random() * 4); 
+        const color = yesCols[~~(Math.random() * yesCols.length)];
+        spark.style.cssText = `width: ${size}px; height: ${size}px; background: radial-gradient(circle, #fff 0%, ${color} 60%, rgba(255,255,255,0) 90%); left: ${startX}px; top: ${startY}px; box-shadow: 0 0 10px ${color}, 0 0 5px rgba(255,255,255,0.9); --x: ${destX}px; --y: ${destY}px; animation: firework ${1 + Math.random() * 1.5}s ease-out forwards; animation-delay: ${Math.random() * 0.2}s;`;
+        container.appendChild(spark);
+        setTimeout(() => spark.remove(), 2500);
+    }
+}
+
+let noMoves=0;
+function moveNo(btn){
+  noMoves++;
+  const w=document.getElementById('brow');
+  btn.style.position='absolute';
+  btn.style.left=Math.max(0,Math.random()*(w.offsetWidth-btn.offsetWidth))+'px';
+  btn.style.top=(Math.random()*80 - 40)+'px'; 
+  if(noMoves>=3){
+    btn.addEventListener('click',goSad,{once:true});
+    btn.addEventListener('touchstart',goSad,{once:true});
+  }
+}
+
+function goSad(){
+    document.getElementById('mainPage').style.display='none';
+    document.getElementById('sadPage').classList.add('show');
+    document.body.classList.remove('yes-celebration'); 
+    document.getElementById('nextBtnFloat').style.display = 'none'; 
+    initRain();
+}
+function goBack(){
+    document.getElementById('sadPage').classList.remove('show');
+    document.getElementById('mainPage').style.display='block';
+    setTimeout(handleYes,300); 
+}
+
+let rainRAF=null;
+function initRain(){const rc=document.getElementById('rainC');rc.width=window.innerWidth;rc.height=window.innerHeight;const rctx=rc.getContext('2d');const drops=[];for(let i=0;i<90;i++)drops.push({x:Math.random()*rc.width,y:Math.random()*rc.height,l:8+Math.random()*22,s:1.5+Math.random()*3});if(rainRAF)cancelAnimationFrame(rainRAF);function frame(){rctx.clearRect(0,0,rc.width,rc.height);rctx.strokeStyle='rgba(167,139,250,.2)';rctx.lineWidth=1;drops.forEach(d=>{rctx.beginPath();rctx.moveTo(d.x,d.y);rctx.lineTo(d.x-2,d.y+d.l);rctx.stroke();d.y+=d.s;if(d.y>rc.height){d.y=-20;d.x=Math.random()*rc.width}});rainRAF=requestAnimationFrame(frame)}frame()}
+</script>
+</body>
+</html>
